@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using parte9_Guia_HttpHelper.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<equiposDbContext>(opt =>
+    opt.UseSqlServer(
+            builder.Configuration.GetConnectionString("equiposDbConnection")
+        )
+);
 
 var app = builder.Build();
 
