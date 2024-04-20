@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using parte9_Guia_HttpHelper.Models;
 
 namespace parte9_Guia_HttpHelper.Controllers
@@ -36,6 +37,7 @@ namespace parte9_Guia_HttpHelper.Controllers
                                     join m in _equiposDbContext.marcas on e.marca_id equals m.id_marca
                                     select new
                                     {
+                                        id_equipo = e.id_equipos,
                                         nombre = e.nombre,
                                         descripcion = e.descripcion,
                                         marca_id = e.marca_id,
@@ -52,6 +54,19 @@ namespace parte9_Guia_HttpHelper.Controllers
             _equiposDbContext.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+
+            var equipos = await _equiposDbContext.equipos.FindAsync(id);
+            if (equipos != null)
+            {
+                _equiposDbContext.equipos.Remove(equipos);
+            }
+
+            await _equiposDbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
